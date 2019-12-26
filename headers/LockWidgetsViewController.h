@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
-#import "../Common.h"
-#import "headers/NSExtension.h"
+#import "Common.h"
+#import "NSExtension.h"
 
 @interface LockWidgetsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) UICollectionView *collectionView;

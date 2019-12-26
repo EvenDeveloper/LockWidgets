@@ -1,4 +1,4 @@
-#import "LockWidgetsViewController.h"
+#import "../headers/LockWidgetsViewController.h"
 
 @implementation LockWidgetsViewController
 @synthesize collectionView;

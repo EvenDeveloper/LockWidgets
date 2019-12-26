@@ -1,4 +1,4 @@
-#import "Tweak.h"
+#import "../headers/Tweak.h"
 
 // HBPreferences object to be accessed and updated at any time
 HBPreferences *tweakPreferences; 
