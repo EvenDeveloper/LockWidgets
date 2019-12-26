@@ -8,6 +8,15 @@ BOOL tweakEnabled = YES;
 
 %group group
 %hook NotificationController
+-(void)viewDidLoad {
+	//CSNotificationAdjunctListViewController *me = (CSNotificationAdjunctListViewController *)self;
+
+	LockWidgetsViewController *lockwidgetsViewController = [[LockWidgetsViewController alloc] init];
+	[lockwidgetsViewController loadView];
+
+	//UIStackView *stackView = [me valueForKey:@"_stackView"];
+	//[stackView addArrangedSubview:lockwidgetsViewController.view];
+}
 %end
 %end
 

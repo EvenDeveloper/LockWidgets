@@ -1,6 +1,7 @@
 #import <Cephei/HBPreferences.h>
 #import <UIKit/UIKit.h>
 #import "../Common.h"
+#import "LockWidgetsViewController.h"
 
 @interface CSNotificationAdjunctListViewController : UIViewController {
 	UIStackView *_stackView;
