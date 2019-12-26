@@ -1,34 +1,48 @@
-/* How to Hook with Logos
-Hooks are written with syntax similar to that of an Objective-C @implementation.
-You don't need to #include <substrate.h>, it will be done automatically, as will
-the generation of a class list and an automatic constructor.
+#import "Tweak.h"
 
-%hook ClassName
+// HBPreferences object to be accessed and updated at any time
+HBPreferences *tweakPreferences; 
 
-// Hooking a class method
-+ (id)sharedInstance {
-	return %orig;
-}
+// Values that are loaded from preferences
+BOOL tweakEnabled = YES;
 
-// Hooking an instance method with an argument.
-- (void)messageName:(int)argument {
-	%log; // Write a message about this call, including its class, name and arguments, to the system log.
-
-	%orig; // Call through to the original function with its original arguments.
-	%orig(nil); // Call through to the original function with a custom argument.
-
-	// If you use %orig(), you MUST supply all arguments (except for self and _cmd, the automatically generated ones.)
-}
-
-// Hooking an instance method with no arguments.
-- (id)noArguments {
-	%log;
-	id awesome = %orig;
-	[awesome doSomethingElse];
-
-	return awesome;
-}
-
-// Always make sure you clean up after yourself; Not doing so could have grave consequences!
+%group group
+%hook NotificationController
 %end
-*/
+%end
+
+// Used to reload preferences from Cephei
+void reloadPreferences() {
+	LogInfo("Reloading preferences...");
+
+	// Load preferences file
+	tweakPreferences = [[HBPreferences alloc] initWithIdentifier:@"me.conorthedev.lockwidgets"];
+
+	// Set defaults for preferences incase they're not initialized already
+	[tweakPreferences registerDefaults:@{
+		@"kEnabled": @YES
+	}];
+
+	// Register the boolean tweakEnabled with the identifier kEnabled
+	[tweakPreferences registerBool:&tweakEnabled default:YES forKey:@"kEnabled"];
+
+	LogDebug("Current Enabled State: %i", tweakEnabled);
+}
+
+// Called when the tweak is injected into a new process
+%ctor {
+	// Easier than having multiple groups, reduces the file length by half basically
+	NSString *notificationControllerClass = @"SBDashBoardNotificationAdjunctListViewController";
+	if(@available(iOS 13.0, *)) {
+		notificationControllerClass = @"CSNotificationAdjunctListViewController";
+		LogInfo(@"Current version is iOS 13 or higher");
+	} else {
+		LogInfo(@"Current version is iOS 12 or lower");
+	}
+
+	%init(group, NotificationController = NSClassFromString(notificationControllerClass));
+
+	// Call reloadPreferences and register notification 'me.conorthedev.lockwidgets/ReloadPrefs' to tell the tweak when it should reload it's preferences
+	reloadPreferences();
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPreferences, CFSTR("me.conorthedev.lockwidgets/ReloadPrefs"), NULL, kNilOptions);
+}
