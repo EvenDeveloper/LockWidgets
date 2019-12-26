@@ -13,6 +13,7 @@ BOOL tweakEnabled = YES;
 
 // Used to reload preferences from Cephei
 void reloadPreferences() {
+	// Log that the preferences are being loaded
 	LogInfo("Reloading preferences...");
 
 	// Load preferences file
@@ -26,23 +27,28 @@ void reloadPreferences() {
 	// Register the boolean tweakEnabled with the identifier kEnabled
 	[tweakPreferences registerBool:&tweakEnabled default:YES forKey:@"kEnabled"];
 
-	LogDebug("Current Enabled State: %i", tweakEnabled);
+	// Log in the console if LockWidgets is enabled or disabled
+	LogInfo("%s", tweakEnabled ? "LockWidgets is enabled!" : "LockWidgets is disabled!");
 }
 
 // Called when the tweak is injected into a new process
 %ctor {
-	// Easier than having multiple groups, reduces the file length by half basically
-	NSString *notificationControllerClass = @"SBDashBoardNotificationAdjunctListViewController";
-	if(@available(iOS 13.0, *)) {
-		notificationControllerClass = @"CSNotificationAdjunctListViewController";
-		LogInfo(@"Current version is iOS 13 or higher");
-	} else {
-		LogInfo(@"Current version is iOS 12 or lower");
-	}
-
-	%init(group, NotificationController = NSClassFromString(notificationControllerClass));
-
 	// Call reloadPreferences and register notification 'me.conorthedev.lockwidgets/ReloadPrefs' to tell the tweak when it should reload it's preferences
 	reloadPreferences();
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPreferences, CFSTR("me.conorthedev.lockwidgets/ReloadPrefs"), NULL, kNilOptions);
+
+	// If the tweak is enabled, run all code, otherwise ignore everything else
+	if(tweakEnabled) {
+		// Easier than having multiple groups, reduces the file length by half basically
+		NSString *notificationControllerClass = @"SBDashBoardNotificationAdjunctListViewController";
+		if(@available(iOS 13.0, *)) {
+			notificationControllerClass = @"CSNotificationAdjunctListViewController";
+			LogDebug(@"Current version is iOS 13 or higher, using %@", notificationControllerClass);
+		} else {
+			LogDebug(@"Current version is iOS 12 or lower, using %@", notificationControllerClass);
+		}
+
+		// Start hooking into the classes we need to hook
+		%init(group, NotificationController = NSClassFromString(notificationControllerClass));
+	}
 }
