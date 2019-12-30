@@ -1,4 +1,4 @@
-#import "../headers/Tweak.h"
+#import "Tweak.h"
 
 // HBPreferences object to be accessed and updated at any time
 HBPreferences *tweakPreferences; 
@@ -9,13 +9,19 @@ BOOL tweakEnabled = YES;
 %group group
 %hook NotificationController
 -(void)viewDidLoad {
-	//CSNotificationAdjunctListViewController *me = (CSNotificationAdjunctListViewController *)self;
+	%orig;
 
-	LockWidgetsViewController *lockwidgetsViewController = [[LockWidgetsViewController alloc] init];
-	[lockwidgetsViewController loadView];
+	CSNotificationAdjunctListViewController *typedSelf = (CSNotificationAdjunctListViewController *)self;
 
-	//UIStackView *stackView = [me valueForKey:@"_stackView"];
-	//[stackView addArrangedSubview:lockwidgetsViewController.view];
+	LockWidgetsView *lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:CGRectMake(0, 0, typedSelf.view.frame.size.width - 10, 150)];
+
+	UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
+	[stackView addArrangedSubview:lockWidgetsView];
+
+	[NSLayoutConstraint activateConstraints:@[
+        [lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
+        [lockWidgetsView.heightAnchor constraintEqualToConstant:150]
+	]];
 }
 %end
 %end
