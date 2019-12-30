@@ -23,8 +23,8 @@ BOOL tweakEnabled = YES;
 	[NSLayoutConstraint activateConstraints:@[
 	    [lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
 	    [lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:10],
-        [lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-10],
-        [lockWidgetsView.heightAnchor constraintEqualToConstant:150]
+    	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-10],
+    	[lockWidgetsView.heightAnchor constraintEqualToConstant:150]
 	]];
 }
 %end
