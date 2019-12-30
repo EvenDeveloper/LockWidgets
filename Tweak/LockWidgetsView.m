@@ -22,6 +22,7 @@
 
 	self.collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
 	self.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+	self.collectionViewLayout.itemSize = CGSizeMake(355, 150);
 
 	self.collectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:self.collectionViewLayout];
 
@@ -32,6 +33,7 @@
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	self.collectionView.layer.cornerRadius = 13;
 	self.collectionView.layer.masksToBounds = true;
+	self.collectionView.pagingEnabled = YES;
 
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"WidgetCell"];
 
@@ -47,11 +49,14 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NULL;
+	UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"WidgetCell" forIndexPath:indexPath];
+
+	cell.backgroundColor = [UIColor colorWithHue:drand48() saturation:1.0 brightness:1.0 alpha:1.0];
+
+	return cell;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	//return [self.widgetIdentifiers count];
-	return 0;
+	return [widgetIdentifiers count];
 }
 @end
