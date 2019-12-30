@@ -18,13 +18,13 @@ BOOL tweakEnabled = YES;
 	UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
 	[stackView addArrangedSubview:lockWidgetsView];
 
-	lockWidgetsView.bounds = CGRectInset(lockWidgetsView.frame, 0, 10.0f);
+	lockWidgetsView.bounds = CGRectInset(lockWidgetsView.frame, 0, 5.0f);
 
 	[NSLayoutConstraint activateConstraints:@[
-	    [lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
-	    [lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:10],
+	  	[lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
+	  	[lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:10],
     	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-10],
-    	[lockWidgetsView.heightAnchor constraintEqualToConstant:150]
+  		[lockWidgetsView.heightAnchor constraintEqualToConstant:150]
 	]];
 }
 %end
