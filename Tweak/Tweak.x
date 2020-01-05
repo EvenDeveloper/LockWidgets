@@ -13,19 +13,50 @@ BOOL tweakEnabled = YES;
 
 	CSNotificationAdjunctListViewController *typedSelf = (CSNotificationAdjunctListViewController *)self;
 
-	LockWidgetsView *lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:CGRectMake(0, 0, typedSelf.view.frame.size.width - 10, 150)];
+	LockWidgetsView *lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:CGRectMake(0, 0, typedSelf.view.frame.size.width, 150)];
+	lockWidgetsView.bounds = CGRectInset(lockWidgetsView.frame, 0, 2.5f);
 
 	UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
 	[stackView addArrangedSubview:lockWidgetsView];
 
-	lockWidgetsView.bounds = CGRectInset(lockWidgetsView.frame, 0, 5.0f);
-
 	[NSLayoutConstraint activateConstraints:@[
 	  	[lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
-	  	[lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:10],
-    	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-10],
+	  	[lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:5],
+    	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-5],
   		[lockWidgetsView.heightAnchor constraintEqualToConstant:150]
 	]];
+
+	[LockWidgetsManager sharedInstance].view = lockWidgetsView;
+}
+
+-(void)_insertItem:(id)arg1 animated:(BOOL)arg2 {
+	%orig;
+	[self refreshView];
+}
+
+-(void)viewDidAppear {
+	%orig;
+	[self refreshView];
+}
+
+-(void)_updatePresentingContent {
+    %orig;
+	[self refreshView];
+}
+
+%new 
+-(void)refreshView {
+	LockWidgetsView *view = [LockWidgetsManager sharedInstance].view;
+
+	if(view) {
+		CSNotificationAdjunctListViewController *typedSelf = (CSNotificationAdjunctListViewController *)self;
+		
+		UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
+		[stackView removeArrangedSubview:view];
+		[stackView addArrangedSubview:view];
+
+		[view.collectionView reloadData];
+	}
 }
 %end
 %end
