@@ -34,8 +34,8 @@ BOOL tweakEnabled = YES;
 	[self refreshView];
 }
 
--(void)viewDidAppear {
-	%orig;
+-(void)viewDidAppear:(BOOL)animated {
+	%orig(animated);
 	[self refreshView];
 }
 
@@ -49,6 +49,7 @@ BOOL tweakEnabled = YES;
 	LockWidgetsView *view = [LockWidgetsManager sharedInstance].view;
 
 	if(view) {
+		LogDebug("Refreshing View");
 		CSNotificationAdjunctListViewController *typedSelf = (CSNotificationAdjunctListViewController *)self;
 		
 		UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
@@ -56,6 +57,7 @@ BOOL tweakEnabled = YES;
 		[stackView addArrangedSubview:view];
 
 		[view.collectionView reloadData];
+		LogDebug("View Refreshed");
 	}
 }
 %end
