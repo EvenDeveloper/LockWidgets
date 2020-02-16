@@ -1,4 +1,48 @@
 #import "Tweak.h"
+#import "MRYIPCCenter.h"
+
+@interface LWIPCServer : NSObject
+@end
+
+@implementation LWIPCServer
+{
+	MRYIPCCenter* _center;
+}
+
++(void)load
+{
+	[self sharedInstance];
+}
+
++(instancetype)sharedInstance
+{
+	static dispatch_once_t onceToken = 0;
+	__strong static LWIPCServer* sharedInstance = nil;
+	dispatch_once(&onceToken, ^{
+		sharedInstance = [[self alloc] init];
+	});
+	return sharedInstance;
+}
+
+-(instancetype)init
+{
+	if ((self = [super init]))
+	{
+		_center = [MRYIPCCenter centerNamed:@"me.conorthedev.lockwidgets.ipc"];
+		[_center addTarget:self action:@selector(getLWView:)];
+		NSLog(@"[LWIPCServer] running server in %@", [NSProcessInfo processInfo].processName);
+	}
+	return self;
+}
+
+-(NSData*)getLWView:(NSDictionary*)args
+{
+	LockWidgetsView *lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
+	return [NSKeyedArchiver archivedDataWithRootObject:lockWidgetsView];
+}
+@end
+
+static LWIPCServer *ipc;
 
 // HBPreferences object to be accessed and updated at any time
 HBPreferences *tweakPreferences; 
@@ -77,6 +121,8 @@ void reloadPreferences() {
 
 // Called when the tweak is injected into a new process
 %ctor {
+	ipc = [LWIPCServer sharedInstance];
+	
 	// Call reloadPreferences and register notification 'me.conorthedev.lockwidgets/ReloadPrefs' to tell the tweak when it should reload it's preferences
 	reloadPreferences();
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPreferences, CFSTR("me.conorthedev.lockwidgets/ReloadPrefs"), NULL, kNilOptions);
