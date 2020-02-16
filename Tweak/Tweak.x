@@ -19,12 +19,10 @@ BOOL tweakEnabled = YES;
 	UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
 	[stackView addArrangedSubview:lockWidgetsView];
 
-	[NSLayoutConstraint activateConstraints:@[
-	  	[lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor],
-	  	[lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:5],
-    	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-5],
-  		[lockWidgetsView.heightAnchor constraintEqualToConstant:150]
-	]];
+	[lockWidgetsView.centerXAnchor constraintEqualToAnchor:stackView.centerXAnchor].active = true;
+	[lockWidgetsView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:5].active = true;
+	[lockWidgetsView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-5].active = true;
+	[lockWidgetsView.heightAnchor constraintEqualToConstant:150].active = true;
 
 	[LockWidgetsManager sharedInstance].view = lockWidgetsView;
 }
@@ -50,13 +48,7 @@ BOOL tweakEnabled = YES;
 
 	if(view) {
 		LogDebug("Refreshing View");
-		CSNotificationAdjunctListViewController *typedSelf = (CSNotificationAdjunctListViewController *)self;
-		
-		UIStackView *stackView = [typedSelf valueForKey:@"_stackView"];
-		[stackView removeArrangedSubview:view];
-		[stackView addArrangedSubview:view];
-
-		[view.collectionView reloadData];
+		[view refresh];
 		LogDebug("View Refreshed");
 	}
 }
@@ -93,7 +85,7 @@ void reloadPreferences() {
 	if(tweakEnabled) {
 		// Easier than having multiple groups, reduces the file length by half basically
 		NSString *notificationControllerClass = @"SBDashBoardNotificationAdjunctListViewController";
-		if(@available(iOS 13.0, *)) {
+		if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
 			notificationControllerClass = @"CSNotificationAdjunctListViewController";
 			LogDebug(@"Current version is iOS 13 or higher, using %@", notificationControllerClass);
 		} else {

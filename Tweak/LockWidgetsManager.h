@@ -1,7 +1,7 @@
 #import "LockWidgetsView.h"
 
 @interface LockWidgetsManager : NSObject
-@property (nonatomic, weak) LockWidgetsView *view;
+@property (nonatomic, retain) LockWidgetsView *view;
 + (instancetype)sharedInstance;
 - (id)init;
 @end

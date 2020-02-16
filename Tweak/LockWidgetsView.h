@@ -7,6 +7,8 @@
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (nonatomic, retain) UICollectionViewFlowLayout *collectionViewLayout;
 @property (strong, nonatomic) NSMutableArray *widgetIdentifiers;
+
+- (void)refresh;
 @end
 
 @interface MTMaterialView : UIView
