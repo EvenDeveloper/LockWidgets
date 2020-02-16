@@ -8,8 +8,9 @@ SDKVERSION = 11.2
 
 TWEAK_NAME = LockWidgets
 
-LockWidgets_FILES = Tweak.x LockWidgetsView.mm LockWidgetsManager.m
+LockWidgets_FILES = Tweak.x LockWidgetsManager.m
 LockWidgets_CFLAGS = -fobjc-arc
 LockWidgets_EXTRA_FRAMEWORKS += Cephei
+LockWidgets_LIBRARIES = lockwidgets
 
 include $(THEOS_MAKE_PATH)/tweak.mk

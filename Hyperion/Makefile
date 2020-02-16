@@ -1,6 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LockWidgetsHyperion
+$(BUNDLE_NAME)_LIBRARIES = lockwidgets
 $(BUNDLE_NAME)_CFLAGS = -fobjc-arc
 $(BUNDLE_NAME)_FILES = $(wildcard *.m) $(wildcard *.mm)
 $(BUNDLE_NAME)_FRAMEWORKS = UIKit
