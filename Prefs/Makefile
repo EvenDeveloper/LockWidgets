@@ -6,8 +6,7 @@ SDKVERSION = 11.2
 
 BUNDLE_NAME = LockWidgetsPrefs
 
-LockWidgetsPrefs_FILES = LWRootListController.m Cells/LWPreviewCell.m
-LockWidgetsPrefs_LIBRARIES = mryipc
+LockWidgetsPrefs_FILES = LWRootListController.m
 LockWidgetsPrefs_INSTALL_PATH = /Library/PreferenceBundles
 LockWidgetsPrefs_FRAMEWORKS = UIKit
 LockWidgetsPrefs_PRIVATE_FRAMEWORKS = Preferences
