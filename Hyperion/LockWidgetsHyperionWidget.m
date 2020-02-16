@@ -7,11 +7,10 @@
 
 @implementation LockWidgetsHyperionWidget
 - (void)setup {
-	self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
+	self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width - 50, 150)];
 	self.contentView.backgroundColor = [UIColor clearColor];
 
-	lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
-	lockWidgetsView.bounds = CGRectInset(lockWidgetsView.frame, 0, 2.5f);
+	lockWidgetsView = [[LockWidgetsView alloc] initWithFrame:self.contentView.frame];
 
 	[self.contentView addSubview:lockWidgetsView];
 }

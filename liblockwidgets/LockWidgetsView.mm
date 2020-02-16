@@ -15,9 +15,9 @@
 
 		self.collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
 		self.collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-		self.collectionViewLayout.itemSize = CGSizeMake(frame.size.width - 5, 147.5);
-		self.collectionViewLayout.estimatedItemSize = CGSizeMake(frame.size.width - 5, 147.5);
-		self.collectionViewLayout.minimumLineSpacing = 2.5;
+		self.collectionViewLayout.itemSize = CGSizeMake(frame.size.width - 5, 150);
+		self.collectionViewLayout.estimatedItemSize = CGSizeMake(frame.size.width - 5, 150);
+		self.collectionViewLayout.minimumLineSpacing = 5;
 
 		self.collectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:self.collectionViewLayout];
 		self.collectionView.dataSource = self;
@@ -28,8 +28,7 @@
 		self.collectionView.layer.cornerRadius = 13;
 		self.collectionView.layer.masksToBounds = true;
 		self.collectionView.pagingEnabled = YES;
-		self.collectionView.contentSize = CGSizeMake(([widgetIdentifiers count] * 350) + 100, 147.5);
-		self.collectionView.contentInset = UIEdgeInsetsMake(0, 2.5, 2.5, 2.5);
+		self.collectionView.contentSize = CGSizeMake(([widgetIdentifiers count] * frame.size.width - 5) + 100, 150);
 
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"WidgetCell"];
 
@@ -48,6 +47,19 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"WidgetCell" forIndexPath:indexPath];
+
+	if (!NSClassFromString(@"WGWidgetPlatterView")) {
+		cell.backgroundColor = [UIColor darkGrayColor];
+		UILabel *textLabel = [[UILabel alloc]
+			initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width,
+									 cell.contentView.frame.size.height)];
+		textLabel.textAlignment = NSTextAlignmentCenter;
+		textLabel.textColor = [UIColor whiteColor];
+		textLabel.numberOfLines = 0;
+		[textLabel setText:@"Widget goes here"];
+		[cell.contentView addSubview:textLabel];
+		return cell;
+	}
 
 	NSError *error;
 	NSString *identifier = [widgetIdentifiers objectAtIndex:indexPath.row];
@@ -92,18 +104,21 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView
 								 layout:(UICollectionViewLayout *)collectionViewLayout
 	minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-	return 2.5;
+	return 5;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-	return UIEdgeInsetsMake(0, 2.5, 2.5, 2.5);
+	return UIEdgeInsetsMake(0, 2.5, 0, 2.5);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return CGSizeMake(self.frame.size.width - 5, 147.5);
+	return CGSizeMake(self.frame.size.width - 5, self.frame.size.height);
 }
 
 - (void)refresh {
+	if (!NSClassFromString(@"WGWidgetPlatterView")) {
+		return;
+	}
 	LogDebug(@"Refreshing...");
 	[self.collectionView reloadData];
 
