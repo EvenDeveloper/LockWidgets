@@ -4,6 +4,6 @@ ARCHS = arm64
 TARGET = iphone:clang:11.2:11.2
 SDKVERSION = 11.2
 
-SUBPROJECTS += Tweak Prefs
+SUBPROJECTS += Tweak Prefs Hyperion
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
